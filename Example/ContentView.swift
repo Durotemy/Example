@@ -14,20 +14,26 @@ struct ContentView: View {
                                 
     ]
     @State private var newTaskTitle = "";
+    @State private var showAlert = false;
     var body: some View {
         VStack {
             
             Text("Hello, world howdy! ").font(.largeTitle).fontWeight(.bold)
             Text("Stay beautiful").font(.subheadline).foregroundStyle(.secondary)
             
-            Text("Tasks: \(taskCount)")
+            Text("Tasks: \(tasks.count)")
                             .font(.title2)
             
             HStack {
                 TextField("Enter new Task", text: $newTaskTitle).textFieldStyle(.roundedBorder)
                 
                 Button("Add Text"){
-                    addTask()
+                    if newTaskTitle.isEmpty {
+                            showAlert = true
+                        } else {
+                            addTask()
+                        }
+                    
                 }.buttonStyle(.borderedProminent)
             }
             
@@ -53,13 +59,24 @@ struct ContentView: View {
 //                        .cornerRadius(8)
 //                
 //            }
-            
+            .alert("Cannot be empty",
+                   isPresented: $showAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please enter a task title before adding.")
+            }
             List{
                 ForEach(tasks) { task in
                     HStack{
                         /*@START_MENU_TOKEN@*/Text(task.title)/*@END_MENU_TOKEN@*/
                         Spacer()
                         Image(systemName:"checkmark.rectangle.portrait").foregroundStyle(.brown)
+                        Button {
+                            removeTask(task)
+                        } label: {
+                            Image(systemName: "trash.square")
+                                .foregroundStyle(.brown)
+                        }.buttonStyle(.plain)
                     }
                 }
             }
@@ -73,6 +90,10 @@ struct ContentView: View {
         tasks.append(newTask);
         
         newTaskTitle = "";
+    }
+    
+    private func removeTask(_ task: Task) {
+        tasks.removeAll { $0.id == task.id }
     }
 }
 
