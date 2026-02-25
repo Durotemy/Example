@@ -9,6 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var taskCount: Int =  0
+    @State private var tasks = [Task(title: "Learn Spanish"), Task(title: "Read a book"),
+        
+                                
+    ]
+    @State private var newTaskTitle = "";
     var body: some View {
         VStack {
             
@@ -17,30 +22,57 @@ struct ContentView: View {
             
             Text("Tasks: \(taskCount)")
                             .font(.title2)
-            HStack{
-                Button("Tap Me Increase") {
-                            print("Button tapped")
-                    taskCount += 1
-                        }
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+            
+            HStack {
+                TextField("Enter new Task", text: $newTaskTitle).textFieldStyle(.roundedBorder)
                 
-                Button("Tap Me Decrease") {
-                            print("Button tapped")
-                    taskCount -= 1
-                        }
-                        .padding()
-                        .background(Color.blue)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
-                
+                Button("Add Text"){
+                    addTask()
+                }.buttonStyle(.borderedProminent)
+            }
+            
+//            HStack{
+//                Button("Tap Increase") {
+//                            print("Button tapped")
+//                    taskCount += 1
+//                        }
+//                        .padding()
+//                        .buttonStyle(.borderedProminent)
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(8)
+//                
+//                Button("Tap Decrease") {
+//                            print("Button tapped")
+//                    taskCount -= 1
+//                        }
+//                        .padding()
+//                        .buttonStyle(.borderedProminent)
+//                        .background(Color.blue)
+//                        .foregroundColor(.white)
+//                        .cornerRadius(8)
+//                
+//            }
+            
+            List{
+                ForEach(tasks) { task in
+                    HStack{
+                        /*@START_MENU_TOKEN@*/Text(task.title)/*@END_MENU_TOKEN@*/
+                        Spacer()
+                        Image(systemName:"checkmark.rectangle.portrait").foregroundStyle(.brown)
+                    }
+                }
             }
             
             
         }
         .padding()
+    }
+    private func addTask(){
+        let newTask = Task(title: newTaskTitle)
+        tasks.append(newTask);
+        
+        newTaskTitle = "";
     }
 }
 
